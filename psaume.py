@@ -107,7 +107,7 @@ if __name__ == '__main__':
     for verset in stdin.readlines():
         hemisticheI, hemisticheII = verset.split('*')
         hemisticheI = Phrase(hemisticheI)
-        hemisticheII = Phrase(hemisticheII)
+        hemisticheII = Phrase(hemisticheII[:-1])
         aca = hemisticheII.accent_dernier
         acb = hemisticheII.accent_penultieme
         acc = hemisticheI.accent_dernier
@@ -130,4 +130,4 @@ if __name__ == '__main__':
         hemisticheI.syllabes[acd - 1].encadrer('\\prda{','}')
         #print(hemisticheI.txt, hemisticheII.txt)
         #print(tuple((syl.txt) for syl in hemisticheI.syllabes), tuple((syl.txt) for syl in hemisticheII.syllabes))
-        stdout.write('\\versus{' + str(hemisticheI)[:-1] + '~\*' + str(hemisticheII).replace('\n','}\n'))
+        stdout.write('\\versus{' + str(hemisticheI)[:-1] + '~\*' + str(hemisticheII) + '}\n')
