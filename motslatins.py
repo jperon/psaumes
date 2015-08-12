@@ -41,6 +41,7 @@ ACCENTS = re.compile('[áéíóúýǽ]|á|é|ı́|ó|ú|ý|ǽ|œ́]')
 # Mots prédéfinis.
 DICTIONNAIRE_MOTS = (
     'dé-scri-bo', 'de-scrí-be-re', 'de-scríp-ti-o',
+    'e-ius',
     'id-íp-sum',
 )
 
@@ -162,6 +163,8 @@ def reperer_accent(mot):
         if ACCENTS.search(syllabe):
             return idx
     if len(mot) < 3:
+        return 0
+    if mot[0][0].isupper():
         return 0
     raise AccentAbsent
 
