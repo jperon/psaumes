@@ -41,8 +41,9 @@ ACCENTS = re.compile('[áéíóúýǽ]|á|é|ı́|ó|ú|ý|ǽ|œ́]')
 # Mots prédéfinis.
 DICTIONNAIRE_MOTS = (
     'dé-scri-bo', 'de-scrí-be-re', 'de-scríp-ti-o',
-    'e-ius',
+    'e-ius', 'eu-ge',
     'id-íp-sum',
+    'sic-ut',
 )
 
 
@@ -61,6 +62,7 @@ VOYELLE = '(a|e|o|u|á|é|í|ó|ú|ý|ä|ë|ï|ü|ÿ)'
 
 C = '(' + CONSONNE_DOUBLE + '|' + CONSONNE_SIMPE + ')'
 V = '(' + DIPHTONGUE + '|' + VOYELLE + '|' + I + ')'
+LETTRE = C + '|' + V
 
 
 # Syllabes prédéfinies : placer les syllabes par ordre de priorité.
@@ -88,6 +90,10 @@ def decouper(mot):
 
     Le résultat est un tuple de syllabes.
     '''
+    # Prise en compte des signes de ponctuation.
+    if len(mot) > 1 and not re.match(LETTRE, mot[-1]):
+        decoupe, signe = decouper(mot[:-1]), mot[-1]
+        return decoupe[:-1] + (decoupe[-1] + signe,)
     # Détection des mots déjà découpés
     if '-' in mot:
         return mot.split('-')
@@ -115,6 +121,9 @@ def decouper(mot):
                 and not re.match(
                     CONSONNE_DOUBLE,
                     mot[resultat.start():resultat.end()]
+                )
+                and not (
+                    resultat.start() == 0 and re.match(C, mot[0])
                 )
         ):
             return decouper(mot[:resultat.start() + 1]) + \
@@ -146,9 +155,22 @@ def decouper(mot):
     )
     if resultat:
         debug('3\t' + mot[resultat.start():resultat.end()])
-        return decouper(mot[:resultat.start()]) + \
-            (mot[resultat.start():resultat.end()],) + \
+        if resultat.start() == 1 and re.match(C, mot[0]):
+            start = 0
+        else:
+            start = resultat.start()
+        return decouper(mot[:start]) + \
+            (mot[start:resultat.end()],) + \
             decouper(mot[resultat.end():])
+    resultat = re.search(
+        VOYELLE + V,
+        mot,
+        re.IGNORECASE
+    )
+    if resultat:
+        debug('4\t' + mot[resultat.start():resultat.end()])
+        return decouper(mot[:resultat.start() + 1]) + \
+            (mot[resultat.start() + 1:],)
     return (mot,) if len(mot) else tuple()
 
 

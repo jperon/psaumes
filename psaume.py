@@ -125,7 +125,7 @@ if __name__ == '__main__':
         hemisticheI.syllabes[acc - 2].encadrer('\\prcb{','}')
         hemisticheI.syllabes[acc - 3].encadrer('\\prcc{','}')
         if acc == -3:
-            hemisticheI.syllabes[aca + 1].encadrer('\\sacc{','}')
+            hemisticheI.syllabes[acc + 1].encadrer('\\sacc{','}')
         hemisticheI.syllabes[acd].encadrer('\\acd{','}')
         hemisticheI.syllabes[acd - 1].encadrer('\\prda{','}')
         #print(hemisticheI.txt, hemisticheII.txt)
